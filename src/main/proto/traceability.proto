@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+package org.example.pro3assignment2.generated; // add to .gitignore
+
+// Lets people outside the slaughterhouse trace animals and products,
+// e.g. to recall products if something is wrong with an animal.
+service TraceabilityService {
+  // all animals that have parts in a product
+  rpc GetAnimalsInProduct(GetAnimalsInProductRequest) returns (AnimalsResponse);
+  // all products an animal has been part of (used for recalls)
+  rpc GetProductsForAnimal(GetProductsForAnimalRequest) returns (ProductsResponse);
+}
+
+message Animal {
+  string reg_no = 1;
+  string species = 2;
+  double weight_kg = 3;
+  string arrival_date = 4; // yyyy-mm-dd
+}
+
+message Product {
+  int64 id = 1;
+  string type = 2; // PACKAGE or HALF_ANIMAL
+}
+
+message GetAnimalsInProductRequest {
+  int64 product_id = 1;
+}
+
+message GetProductsForAnimalRequest {
+  string reg_no = 1;
+}
+
+message AnimalsResponse {
+  repeated Animal animals = 1;
+}
+
+message ProductsResponse {
+  repeated Product products = 1;
+}
