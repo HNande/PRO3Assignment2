@@ -1,7 +1,7 @@
-INSERT INTO animal (reg_no, species, weight_kg, arrival_date)
-VALUES ('A-1001', 'Pig', 112.5, '2026-10-01'),
-       ('A-1002', 'Pig', 108.0, '2026-10-01'),
-       ('A-1003', 'Pig', 120.3, '2026-10-02');
+INSERT INTO animal (reg_no, species, weight_kg, arrival_date, origin)
+VALUES ('A-1001', 'Pig', 112.5, '2026-10-01', 'Sundsvik Farm'),
+       ('A-1002', 'Pig', 108.0, '2026-10-01', 'Sundsvik Farm'),
+       ('A-1003', 'Pig', 120.3, '2026-10-02', 'Gävle Farm');
 
 INSERT INTO tray (id, part_type, max_weight_kg)
 VALUES (1, 'HAM', 50),

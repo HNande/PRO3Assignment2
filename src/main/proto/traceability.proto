@@ -17,6 +17,7 @@ message Animal {
   string species = 2;
   double weight_kg = 3;
   string arrival_date = 4; // yyyy-mm-dd
+  string origin = 5;
 }
 
 message Product {

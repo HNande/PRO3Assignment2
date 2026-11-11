@@ -30,7 +30,7 @@ class GrpcTraceabilityServerTest {
         TraceabilityService fakeService = new TraceabilityService() {
             @Override
             public List<AnimalRecord> getAnimalsInProduct(long productId) {
-                return List.of(new AnimalRecord("A-1001", "Pig", 112.5, LocalDate.of(2026, 10, 1)));
+                return List.of(new AnimalRecord("A-1001", "Pig", 112.5, LocalDate.of(2026, 10, 1), "Sundsvik Farm"));
             }
 
             @Override

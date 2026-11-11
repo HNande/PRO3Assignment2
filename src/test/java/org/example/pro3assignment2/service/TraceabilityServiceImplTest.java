@@ -21,9 +21,33 @@ class TraceabilityServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        AnimalRepository fakeAnimals = productId -> productId == 1
-                ? List.of(new AnimalRecord("A-1", "Pig", 100, LocalDate.of(2026, 10, 1)))
-                : List.of();
+        AnimalRepository fakeAnimals = new AnimalRepository() {
+            @Override
+            public List<AnimalRecord> findByProductId(long productId) {
+                return productId == 1
+                        ? List.of(new AnimalRecord("A-1", "Pig", 100, LocalDate.of(2026, 10, 1), "Test Farm"))
+                        : List.of();
+            }
+
+            @Override
+            public java.util.Optional<AnimalRecord> findByRegistrationNumber(String regNo) {
+                return java.util.Optional.empty();
+            }
+
+            @Override
+            public List<AnimalRecord> findByArrivalDate(LocalDate date) {
+                return List.of();
+            }
+
+            @Override
+            public List<AnimalRecord> findByOrigin(String origin) {
+                return List.of();
+            }
+
+            @Override
+            public void save(AnimalRecord animal) {
+            }
+        };
 
         ProductRepository fakeProducts = regNo -> {
             lastRegNoSearched = regNo;

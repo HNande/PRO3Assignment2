@@ -10,7 +10,8 @@ CREATE TABLE animal
     reg_no       VARCHAR(20) PRIMARY KEY,
     species      VARCHAR(50)      NOT NULL,
     weight_kg    DOUBLE PRECISION NOT NULL,
-    arrival_date DATE             NOT NULL
+    arrival_date DATE             NOT NULL,
+    origin       VARCHAR(100)     NOT NULL
 );
 
 -- station 2: a tray only holds one type of part

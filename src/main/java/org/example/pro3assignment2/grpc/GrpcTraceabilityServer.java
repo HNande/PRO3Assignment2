@@ -57,6 +57,7 @@ public class GrpcTraceabilityServer extends TraceabilityServiceGrpc.Traceability
                     .setSpecies(animal.species())
                     .setWeightKg(animal.weightKg())
                     .setArrivalDate(animal.arrivalDate().toString())
+                    .setOrigin(animal.origin())
                     .build();
         }
 
