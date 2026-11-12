@@ -21,12 +21,12 @@ message Animal {
 }
 
 message Product {
-  int64 id = 1;
+  int32 id = 1;
   string type = 2; // PACKAGE or HALF_ANIMAL
 }
 
 message GetAnimalsInProductRequest {
-  int64 product_id = 1;
+  int32 product_id = 1;
 }
 
 message GetProductsForAnimalRequest {

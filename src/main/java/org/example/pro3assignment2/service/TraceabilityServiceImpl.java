@@ -6,7 +6,6 @@ import org.example.pro3assignment2.repository.AnimalRepository;
 import org.example.pro3assignment2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,7 +22,7 @@ public class TraceabilityServiceImpl implements TraceabilityService {
     }
 
     @Override
-    public List<AnimalRecord> getAnimalsInProduct(long productId){
+    public List<AnimalRecord> getAnimalsInProduct(int productId){
         return animalRepository.findByProductId(productId);
     }
 

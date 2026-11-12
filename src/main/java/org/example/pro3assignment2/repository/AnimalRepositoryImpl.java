@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class AnimalRepositoryImpl implements AnimalRepository {
     }
 
     @Override
-    public List<AnimalRecord> findByProductId(long productId) {
+    public List<AnimalRecord> findByProductId(int productId) {
         // product -> trays -> parts -> animals
         String sql = """
                 SELECT DISTINCT a.reg_no, a.species, a.weight_kg, a.arrival_date, a.origin

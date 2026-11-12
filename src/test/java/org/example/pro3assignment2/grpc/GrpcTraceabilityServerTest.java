@@ -11,7 +11,6 @@ import org.example.pro3assignment2.service.TraceabilityService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +28,7 @@ class GrpcTraceabilityServerTest {
     void setUp() throws Exception {
         TraceabilityService fakeService = new TraceabilityService() {
             @Override
-            public List<AnimalRecord> getAnimalsInProduct(long productId) {
+            public List<AnimalRecord> getAnimalsInProduct(int productId) {
                 return List.of(new AnimalRecord("A-1001", "Pig", 112.5, LocalDate.of(2026, 10, 1), "Sundsvik Farm"));
             }
 

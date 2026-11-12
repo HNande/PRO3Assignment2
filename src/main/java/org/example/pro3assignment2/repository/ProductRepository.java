@@ -1,7 +1,6 @@
 package org.example.pro3assignment2.repository;
 
 import org.example.pro3assignment2.model.ProductRecord;
-
 import java.util.List;
 
 public interface ProductRepository {

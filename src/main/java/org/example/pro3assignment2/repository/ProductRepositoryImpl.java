@@ -4,7 +4,6 @@ import org.example.pro3assignment2.model.ProductRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -30,7 +29,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ProductRecord(
-                rs.getLong("id"),
+                rs.getInt("id"),
                 rs.getString("product_type")
         ), regNo);
     }

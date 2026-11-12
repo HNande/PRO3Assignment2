@@ -5,7 +5,6 @@ import org.example.pro3assignment2.model.ProductRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +33,7 @@ class RepositoryTest {
     @Test
     void animalIsFoundInAllItsProducts() {
         List<ProductRecord> products = productRepository.findByAnimalRegNo("A-1003");
-        assertEquals(List.of(3L, 4L), products.stream().map(ProductRecord::id).toList());
+        assertEquals(List.of(3, 4), products.stream().map(ProductRecord::id).toList());
     }
 
     @Test

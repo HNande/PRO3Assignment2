@@ -1,7 +1,6 @@
 package org.example.pro3assignment2.service;
 
 import org.example.pro3assignment2.model.AnimalRecord;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;

@@ -8,7 +8,6 @@ import org.example.pro3assignment2.service.TraceabilityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.grpc.server.service.GrpcService;
-
 import java.util.List;
 
 @GrpcService

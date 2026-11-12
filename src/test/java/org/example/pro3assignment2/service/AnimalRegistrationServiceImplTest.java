@@ -4,7 +4,6 @@ import org.example.pro3assignment2.model.AnimalRecord;
 import org.example.pro3assignment2.repository.AnimalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ class AnimalRegistrationServiceImplTest {
 
         AnimalRepository fakeRepository = new AnimalRepository() {
             @Override
-            public List<AnimalRecord> findByProductId(long productId) {
+            public List<AnimalRecord> findByProductId(int productId) {
                 return List.of();
             }
 

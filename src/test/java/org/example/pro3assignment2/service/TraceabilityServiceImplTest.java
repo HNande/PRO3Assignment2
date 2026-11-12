@@ -6,7 +6,6 @@ import org.example.pro3assignment2.repository.AnimalRepository;
 import org.example.pro3assignment2.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,7 +22,7 @@ class TraceabilityServiceImplTest {
     void setUp() {
         AnimalRepository fakeAnimals = new AnimalRepository() {
             @Override
-            public List<AnimalRecord> findByProductId(long productId) {
+            public List<AnimalRecord> findByProductId(int productId) {
                 return productId == 1
                         ? List.of(new AnimalRecord("A-1", "Pig", 100, LocalDate.of(2026, 10, 1), "Test Farm"))
                         : List.of();
