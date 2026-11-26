@@ -1,13 +1,16 @@
-package org.example.pro3assignment2.grpc;
+package org.example.traceability.grpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.Server;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import org.example.pro3assignment2.generated.*;
-import org.example.pro3assignment2.model.AnimalRecord;
-import org.example.pro3assignment2.model.ProductRecord;
-import org.example.pro3assignment2.service.TraceabilityService;
+import org.example.slaughterhouse.grpc.*;
+import org.example.traceability.model.AnimalRecord;
+import org.example.traceability.model.ProductRecord;
+import org.example.traceability.service.TraceabilityService;
+import org.example.traceability.station.StationUnavailableException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +37,7 @@ class GrpcTraceabilityServerTest {
 
             @Override
             public List<ProductRecord> getProductsForAnimal(String regNo) {
-                return List.of(new ProductRecord(1, "PACKAGE"), new ProductRecord(3, "HALF_ANIMAL"));
+                return List.of(new ProductRecord(1, "PACKAGE", List.of(1)), new ProductRecord(3, "HALF_ANIMAL", List.of(2, 3, 4)));
             }
         };
 
@@ -71,5 +74,36 @@ class GrpcTraceabilityServerTest {
 
         assertEquals(2, response.getProductsCount());
         assertEquals("HALF_ANIMAL", response.getProducts(1).getType());
+        assertEquals(List.of(2, 3, 4), response.getProducts(1).getTrayIdsList());
+    }
+
+    @Test
+    void stationDownGivesUnavailable() throws Exception {
+        TraceabilityService failingService = new TraceabilityService() {
+            @Override
+            public List<AnimalRecord> getAnimalsInProduct(int productId) {
+                throw new StationUnavailableException("Station 3 (packing)", null);
+            }
+
+            @Override
+            public List<ProductRecord> getProductsForAnimal(String regNo) {
+                throw new StationUnavailableException("Station 2 (cutting)", null);
+            }
+        };
+        String name = InProcessServerBuilder.generateName();
+        Server failingServer = InProcessServerBuilder.forName(name)
+                .addService(new GrpcTraceabilityServer(failingService)).build().start();
+        ManagedChannel failingChannel = InProcessChannelBuilder.forName(name).build();
+        try {
+            var failingClient = TraceabilityServiceGrpc.newBlockingStub(failingChannel);
+
+            StatusRuntimeException e = assertThrows(StatusRuntimeException.class, () -> failingClient
+                    .getProductsForAnimal(GetProductsForAnimalRequest.newBuilder().setRegNo("A-1001").build()));
+            assertEquals(Status.Code.UNAVAILABLE, e.getStatus().getCode());
+            assertTrue(e.getStatus().getDescription().contains("Station 2"));
+        } finally {
+            failingChannel.shutdownNow();
+            failingServer.shutdownNow();
+        }
     }
 }

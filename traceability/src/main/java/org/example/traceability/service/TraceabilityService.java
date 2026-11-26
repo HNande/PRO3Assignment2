@@ -1,7 +1,7 @@
-package org.example.pro3assignment2.service;
+package org.example.traceability.service;
 
-import org.example.pro3assignment2.model.AnimalRecord;
-import org.example.pro3assignment2.model.ProductRecord;
+import org.example.traceability.model.AnimalRecord;
+import org.example.traceability.model.ProductRecord;
 import java.util.List;
 
 public interface TraceabilityService {
