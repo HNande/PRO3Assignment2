@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+// Every module has its own copy of this file. Keep the copies identical.
+option java_multiple_files = true;
+option java_package = "org.example.slaughterhouse.grpc"; // generated, see .gitignore
+package slaughterhouse;
+
+// ---------------------------------------------------------------------------
+// Shared messages
+// ---------------------------------------------------------------------------
+
+message Animal {
+  string reg_no = 1;
+  string species = 2;
+  double weight_kg = 3;
+  string arrival_date = 4; // yyyy-mm-dd
+  string origin = 5;       // farm
+}
+
+message Part {
+  int32 id = 1;
+  string part_type = 2;     // HAM, RIBS, LOIN ...
+  double weight_kg = 3;
+  string animal_reg_no = 4; // the animal the part comes from
+  int32 tray_id = 5;
+}
+
+// A tray only holds one type of part
+message Tray {
+  int32 id = 1;
+  string part_type = 2;
+  double max_weight_kg = 3;
+  double current_weight_kg = 4;
+  bool closed = 5;
+  repeated Part parts = 6;
+}
+
+message Product {
+  int32 id = 1;
+  string type = 2;              // PACKAGE or HALF_ANIMAL
+  repeated int32 tray_ids = 3;  // the trays the parts came from
+  repeated int32 part_ids = 4;
+}
+
+message Ack {
+  bool accepted = 1;
+}
+
+message RegNoRequest {
+  string reg_no = 1;
+}
+
+message RegNoList {
+  repeated string reg_nos = 1;
+}
+
+message TrayIdRequest {
+  int32 tray_id = 1;
+}
+
+message TrayIdList {
+  repeated int32 tray_ids = 1;
+}
+
+message ProductIdRequest {
+  int32 product_id = 1;
+}
+
+message AnimalList {
+  repeated Animal animals = 1;
+}
+
+message ProductList {
+  repeated Product products = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Station 1: animals arrive, are weighed and registered
+// (registration itself is the REST service, this is for the other subsystems)
+// ---------------------------------------------------------------------------
+service RegistrationService {
+  // details of one animal, NOT_FOUND if unknown
+  rpc GetAnimal(RegNoRequest) returns (Animal);
+  // details of several animals, unknown registration numbers are skipped
+  rpc GetAnimals(RegNoList) returns (AnimalList);
+}
+
+// ---------------------------------------------------------------------------
+// Station 2: animals are cut into parts, parts are put into trays
+// ---------------------------------------------------------------------------
+service CuttingService {
+  // station 1 hands over a registered animal
+  rpc ReceiveAnimal(Animal) returns (Ack);
+  // cut, weigh and register one part, it is put into a tray of the same type
+  rpc CutPart(CutPartRequest) returns (Part);
+  // close a tray (no more parts) and send it on to station 3
+  rpc CloseTray(TrayIdRequest) returns (Tray);
+  rpc GetTray(TrayIdRequest) returns (Tray);
+  // traceability
+  rpc GetTraysForAnimal(RegNoRequest) returns (TrayIdList);
+  rpc GetAnimalsInTrays(TrayIdList) returns (RegNoList);
+}
+
+message CutPartRequest {
+  string animal_reg_no = 1;
+  string part_type = 2;
+  double weight_kg = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Station 3: products are packed from the parts in the trays
+// ---------------------------------------------------------------------------
+service PackingService {
+  // station 2 hands over a closed tray with its parts
+  rpc ReceiveTray(Tray) returns (Ack);
+  // a package with a number of parts of the same type
+  rpc PackPackage(PackPackageRequest) returns (Product);
+  // half an animal: one of every expected part type, from any animal
+  rpc PackHalfAnimal(PackHalfAnimalRequest) returns (Product);
+  rpc GetProduct(ProductIdRequest) returns (Product);
+  // traceability
+  rpc GetTraysInProduct(ProductIdRequest) returns (TrayIdList);
+  rpc GetProductsForTrays(TrayIdList) returns (ProductList);
+}
+
+message PackPackageRequest {
+  string part_type = 1;
+  int32 part_count = 2;
+}
+
+message PackHalfAnimalRequest {
+}
+
+// ---------------------------------------------------------------------------
+// Traceability: used from outside the slaughterhouse, e.g. to recall products
+// if something is wrong with an animal
+// ---------------------------------------------------------------------------
+service TraceabilityService {
+  // all animals that have parts in a product
+  rpc GetAnimalsInProduct(GetAnimalsInProductRequest) returns (AnimalsResponse);
+  // all products an animal has been part of (used for recalls)
+  rpc GetProductsForAnimal(GetProductsForAnimalRequest) returns (ProductsResponse);
+}
+
+message GetAnimalsInProductRequest {
+  int32 product_id = 1;
+}
+
+message GetProductsForAnimalRequest {
+  string reg_no = 1;
+}
+
+message AnimalsResponse {
+  repeated Animal animals = 1;
+}
+
+message ProductsResponse {
+  repeated Product products = 1;
+}
